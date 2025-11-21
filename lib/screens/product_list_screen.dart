@@ -93,65 +93,127 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   // ---------------- PRODUCT GRID ----------------
   Widget _productGrid(bool isWeb) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: isWeb ? 100 : 16, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.title,
-            style: AppTextStyles.cartItemName(isWeb).copyWith(
-              fontSize: isWeb ? 25 : 20,
-              fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: isWeb ? 100 : 16, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            // ------- TITLE -------
+            Text(
+              widget.title,
+              style: AppTextStyles.hometitle(isWeb),
             ),
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: GridView.builder(
+
+            const SizedBox(height: 12),
+
+            // ------- GRID VIEW (NON-SCROLLABLE) -------
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),  // 🔥 Important
               itemCount: widget.items.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: isWeb
-                    ? (MediaQuery.of(context).size.width > 1400 ? 4 : 3)
+                    ? (MediaQuery.of(context).size.width > 1200 ? 4 : 3)
                     : 2,
-                childAspectRatio: isWeb ? 0.78 : 0.65,
+                childAspectRatio: isWeb ? 0.75 : 0.73,
                 crossAxisSpacing: 18,
                 mainAxisSpacing: 18,
               ),
               itemBuilder: (_, i) => _productItem(widget.items[i], isWeb),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }
 
-  // ---------------- PRODUCT ITEM ----------------
+
+// ---------------- PRODUCT ITEM ----------------
   Widget _productItem(Map item, bool isWeb) {
+    double containerWidth = isWeb ? 220 : 150;
+    double imageHeight = isWeb ? 270 : 180;
+    double heartRadius = isWeb ? 18 : 14;
+    double heartIconSize = isWeb ? 26 : 24;
+    double horizontalPadding = isWeb ? 12 : 10;
+    double verticalSpacing = isWeb ? 12 : 10;
+
     return Container(
+      width: containerWidth,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // <-- Prevent Column from taking infinite height
         children: [
-          AspectRatio(
-            aspectRatio: 1,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-              child: Image.asset(item[AppStrings.image], fit: BoxFit.cover),
-            ),
+          // IMAGE + HEART ICON
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+                child: Image.asset(
+                  item[AppStrings.image],
+                  width: double.infinity,
+                  height: imageHeight,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Positioned(
+                right: 10,
+                top: 10,
+                child: CircleAvatar(
+                  radius: heartRadius,
+                  backgroundColor: Colors.white,
+                  child: SvgPicture.asset(
+                    AppIcons.heart,
+                    width: heartIconSize,
+                    height: heartIconSize,
+                  ),
+                ),
+              ),
+            ],
           ),
+
+          // PRODUCT DETAILS
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalSpacing / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // <-- important to avoid overflow
               children: [
-                Text(item[AppStrings.name],
-                    maxLines: 1, overflow: TextOverflow.ellipsis, style: AppTextStyles.productName(isWeb)),
-                const SizedBox(height: 4),
-                Text("₹139.00", style: AppTextStyles.homeprice(isWeb)),
+                Text(
+                  item[AppStrings.name],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.productName(isWeb).copyWith(
+                    fontSize: isWeb ? 18 : 14,
+                    fontWeight: isWeb ? FontWeight.w600 : FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: verticalSpacing / 2),
+                Row(
+                  children: [
+                    Text(
+                      "₹139.00",
+                      style: AppTextStyles.homeprice(isWeb).copyWith(
+                        fontSize: isWeb ? 16 : 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Rs.325.00",
+                      style: AppTextStyles.pricedrop(isWeb).copyWith(
+                        fontSize: isWeb ? 14 : 10,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -159,6 +221,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ),
     );
   }
+
+
 
   // ---------------- SEARCH BAR ----------------
   Widget _searchBar(BuildContext context, bool isWeb) {

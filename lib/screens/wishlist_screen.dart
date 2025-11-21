@@ -36,7 +36,7 @@ class WishlistScreen extends StatelessWidget {
                     crossAxisSpacing: 12,
                   ),
                   itemBuilder: (context, index) {
-                    return _buildWishlistItem();
+                    return _buildWishlistItem(isWeb);
                   },
                 ),
               ),
@@ -121,11 +121,11 @@ class WishlistScreen extends StatelessWidget {
   // ----------------------------------------------------------------
   // Wishlist Item Card UI
   // ----------------------------------------------------------------
-  Widget _buildWishlistItem() {
+  Widget _buildWishlistItem( bool isWeb) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        color: Colors.white,
+        color: Colors.transparent,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,43 +141,41 @@ class WishlistScreen extends StatelessWidget {
                   child: Image.asset(
                     AppImages.pro1,
                     width: double.infinity,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
 
               Positioned(
-                right: 8,
-                top: 8,
+                right: isWeb ? 44 : 26, // more spacing on web
+                top: isWeb ? 14 : 10,   // adjust vertical position
                 child: CircleAvatar(
-                  radius: 14,
+                  radius: isWeb ? 18 : 14, // bigger circle on web
                   backgroundColor: Colors.white,
                   child: SvgPicture.asset(
                     AppIcons.heart,
-                    width: 24,
-                    height: 24,
+                    width: isWeb ? 26 : 24,  // bigger icon on web
+                    height: isWeb ? 26 : 24,
                   ),
                 ),
               ),
+
             ],
           ),
 
           const SizedBox(height: 6),
 
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: isWeb ? 44 : 22), // more spacing on web
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Pen Cutter",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
+                 Text(
+                 AppStrings.pencutter,
+                   style: AppTextStyles.productName(isWeb),
                 ),
 
-                const SizedBox(height: 2),
+                const SizedBox(height: 1),
 
                 Row(
                   children: const [

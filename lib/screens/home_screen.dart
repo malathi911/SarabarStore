@@ -298,11 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontSize: isWeb ? 26 : 20,
-                fontWeight: FontWeight.w500,
-                color: AppColors.primaryBlue,
-              ),
+              style: AppTextStyles.hometitle(isWeb),
             ),
             GestureDetector(
               onTap: () {
@@ -338,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: isWeb ? 330 : 320,
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(context).copyWith(
-              scrollbars: true,
+              // scrollbars: true,
               dragDevices: {
                 PointerDeviceKind.touch,
                 PointerDeviceKind.mouse,    // 🔥 Web horizontal drag works
@@ -357,27 +353,48 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      // ---------------- IMAGE FIX ----------------
-                      isWeb
-                          ? ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          items[index][AppStrings.image],
-                          height: 240,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                          : AspectRatio(
-                        aspectRatio: 3 / 5,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: Image.asset(
-                            items[index][AppStrings.image],
-                            fit: BoxFit.cover,
+                      // ---------------- IMAGE WITH HEART ICON ----------------
+                      Stack(
+                        children: [
+                          // PRODUCT IMAGE
+                          isWeb
+                              ? ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.asset(
+                              items[index][AppStrings.image],
+                              height: 240,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                              : AspectRatio(
+                            aspectRatio: 3 / 5,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: Image.asset(
+                                items[index][AppStrings.image],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          // ❤️ HEART ICON SAME AS WISHLIST
+                          Positioned(
+                            right: 10,
+                            top: 10,
+                            child: CircleAvatar(
+                              radius: isWeb ? 16 : 14,
+                              backgroundColor: Colors.white,
+                              child: SvgPicture.asset(
+                                AppIcons.heart,   // your wishlist heart icon
+                                width: isWeb ? 26 : 22,
+                                height: isWeb ? 26 : 22,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+
 
                       const SizedBox(height: 12),
 

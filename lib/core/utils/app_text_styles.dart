@@ -4,7 +4,7 @@ import 'app_colors.dart';
 class AppTextStyles {
   static TextStyle marquee(bool isWeb) => TextStyle(
     color: AppColors.white,
-    fontSize: isWeb ? 22 : 18,
+    fontSize: isWeb ? 18 : 14,
     height: 1.0,
     fontFamily: 'Poppins',
     fontWeight: FontWeight.w400,
@@ -43,6 +43,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w300,
     fontFamily: 'Poppins',
     color: AppColors.cartname,
+  );
+  static TextStyle hometitle(bool isWeb) =>TextStyle(
+  fontSize: isWeb ? 26 : 20,
+  fontWeight: FontWeight.w600,
+  color: AppColors.primaryBlue,
+  fontFamily: 'Poppins'
   );
 
   static TextStyle pricedrop(bool isWeb) => TextStyle(
